@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('state_of_residence')->nullable();
             $table->string('nature_of_business')->nullable();
             $table->string('edi_id')->references('id')->on('edi')->nullable();
+            $table->string('referred_by')->nullable();
             $table->string('registered_by')->references('id')->on('users')->nullable();
             $table->timestamps();
             $table->softDeletes();
