@@ -13,14 +13,6 @@ class ClientController extends Controller
 
 public function searchClient (Request $request, $id){
     $client = Client::where('phone_number', '=', $id)->orWhere('email', '=', $id)->first();
-    // ->where('phone_number', '=', $request->id)
-    // ->get();
-
-    // if ($client->ok()) {
-    // return $client;
-    // } else {
-    //     return "Sorry client not found!";
-    // }
 
     return $client;
 }

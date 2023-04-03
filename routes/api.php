@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\EDIController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\InvoiceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -71,3 +72,5 @@ Route::get('client', [ClientController::class, 'fetchClients'])->name('get.clien
 Route::get('/search-client/{id}', [ClientController::class, 'searchClient']);
 
 Route::get('/export_client_pdf/{id}', [ClientController::class, 'exportClientToPDF'])->name('export.client');
+
+Route::get('invoice', [InvoiceController::class, 'getInvoices']);
