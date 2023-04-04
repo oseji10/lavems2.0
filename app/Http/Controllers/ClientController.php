@@ -12,9 +12,11 @@ class ClientController extends Controller
     // }
 
 public function searchClient (Request $request, $id){
-    $client = Client::where('phone_number', '=', $id)->orWhere('email', '=', $id)->first();
+    $clients = Client::where('phone_number', '=', $id)->orWhere('email', '=', $id)->first();
 
-    return $client;
+    // return $clients;
+    // $clients = response()->json($clients);
+    return response()->json($clients);
 }
 
     public function store(Request $request){

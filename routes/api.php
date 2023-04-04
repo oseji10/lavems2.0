@@ -73,4 +73,5 @@ Route::get('/search-client/{id}', [ClientController::class, 'searchClient']);
 
 Route::get('/export_client_pdf/{id}', [ClientController::class, 'exportClientToPDF'])->name('export.client');
 
-Route::get('invoice', [InvoiceController::class, 'getInvoices']);
+Route::get('/invoice', [InvoiceController::class, 'getInvoices']);
+Route::post('/invoice', [InvoiceController::class, 'store'])->name('invoice.store');
