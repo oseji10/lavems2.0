@@ -4,10 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Invoice;
+use DB;
+
 class InvoiceController extends Controller
 {
     public function getInvoices(){
-        $invoices = Invoice::query()->get();
+
+       $invoices = DB::table('invoice')
+       ->select('invoice_number', 'client_id', 'created_at', 'created_at', 'equipment_serial_number', DB::raw('sum(cost) as total'))
+       ->groupBy('invoice_number', 'client_id', 'created_at',  'created_at', 'equipment_serial_number',)
+       ->orderBy('created_at', 'desc')
+       ->distinct()
+       ->get();
+
+
+        // $invoices = Invoice::query()->get();
         return $invoices;
     }
 
