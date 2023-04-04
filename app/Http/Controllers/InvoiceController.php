@@ -5,18 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
 use DB;
+use App\Models\Client;
+// use Illuminate\Database\Eloquent\Model;
 
 class InvoiceController extends Controller
 {
     public function getInvoices(){
 
+    //    $invoices = DB::table('invoice')
+    //    ->select('invoice_number', 'client_id', 'created_at', 'created_at', 'equipment_serial_number', DB::raw('sum(cost) as total'))
+    //    ->groupBy('invoice_number', 'client_id', 'created_at',  'created_at', 'equipment_serial_number',)
+    //    ->orderBy('created_at', 'desc')
+    //    ->distinct()
+    //    ->with(['client' => function ($query) {$query->select('id', 'name');}])
+    //    ->get();
+
        $invoices = DB::table('invoice')
-       ->select('invoice_number', 'client_id', 'created_at', 'created_at', 'equipment_serial_number', DB::raw('sum(cost) as total'))
-       ->groupBy('invoice_number', 'client_id', 'created_at',  'created_at', 'equipment_serial_number',)
-       ->orderBy('created_at', 'desc')
+       ->join('client', 'client.client_id', '=', 'invoice.client_id')
+       ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'client.name', 'client.email', DB::raw('sum(invoice.cost) as total'))
+       ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'invoice.equipment_serial_number', 'client.name', 'client.email')
        ->distinct()
        ->get();
-
 
         // $invoices = Invoice::query()->get();
         return $invoices;
