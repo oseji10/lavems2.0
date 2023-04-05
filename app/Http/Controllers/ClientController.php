@@ -11,13 +11,16 @@ class ClientController extends Controller
     //     $this->middleware('auth');
     // }
 
-public function searchClient (Request $request, $id){
-    $clients = Client::where('phone_number', '=', $id)->orWhere('email', '=', $id)->first();
+    public function searchClient(Request $request, $id)
+    {
+        $client = Client::where('phone_number', '=', $id)->orWhere('email', '=', $id)->orWhere('client_id', '=', $id)->first();
 
-    // return $clients;
-    // $clients = response()->json($clients);
-    return response()->json($clients);
-}
+        if ($client) {
+            return response()->json(['success' => true, 'client' => $client]);
+        } else {
+            return response()->json(['error' => 'Client not found.'], 404);
+        }
+    }
 
     public function store(Request $request){
         $request->validate([
