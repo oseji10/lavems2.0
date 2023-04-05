@@ -31,6 +31,8 @@ class InvoiceController extends Controller
         return $invoices;
     }
 
+
+
     public function store(Request $request){
         // $request->validate([
         //     'client_id' => 'string',

@@ -8,6 +8,8 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\EDIController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\SubVendorController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -75,3 +77,7 @@ Route::get('/export_client_pdf/{id}', [ClientController::class, 'exportClientToP
 
 Route::get('/invoice', [InvoiceController::class, 'getInvoices']);
 Route::post('/invoice', [InvoiceController::class, 'store'])->name('invoice.store');
+
+Route::get('subvendor_payments', [SubVendorController::class, 'getPayments']);
+
+Route::get('/receipt/{id}', [SubVendorController::class, 'clientReceipt']);
