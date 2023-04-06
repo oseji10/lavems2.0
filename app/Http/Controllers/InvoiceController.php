@@ -30,13 +30,12 @@ class InvoiceController extends Controller
     public function store(Request $request)
 {
     // Validate the request data
-    $validatedData = dd($request->all())([
+    $validatedData = $request->validate([
         'client_id' => 'required',
         'equipment_serial_numbers.*' => 'required',
         'equipments.*' => 'required',
-        'quantities.*' => 'required|integer|min:1'
+        'quantities.*' => 'required'
     ]);
-
     // Loop through the submitted data and create an invoice item for each record
     foreach ($validatedData['equipment_serial_numbers'] as $key => $value) {
         $invoiceItem = new Invoice;
@@ -46,6 +45,8 @@ class InvoiceController extends Controller
         $invoiceItem->quantity = $validatedData['quantities'][$key];
         $invoiceItem->save();
     }
+    Log::debug($invoiceItem);
+
 // return $validatedData;
     // Redirect back with success message
     return redirect()->back()->with('success', 'Invoice added successfully!');
