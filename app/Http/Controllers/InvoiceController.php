@@ -16,6 +16,7 @@ class InvoiceController extends Controller
        ->join('client', 'client.client_id', '=', 'invoice.client_id')
        ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'client.name', 'client.email', DB::raw('sum(invoice.cost) as total'))
        ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'invoice.equipment_serial_number', 'client.name', 'client.email')
+       ->orderBy('created_at', 'desc')
        ->distinct()
        ->get();
 
@@ -32,10 +33,7 @@ class InvoiceController extends Controller
         try {
 
 
-            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $pin = mt_rand(100000, 999999)
-                . mt_rand(100000, 999999);
-            $random_string = str_shuffle($pin);
+
 
 
                 $invoiceItem = new Invoice;
