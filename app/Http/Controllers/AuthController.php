@@ -20,39 +20,63 @@ class AuthController extends Controller
     //     return response()->json(['token' => $token]);
     // }
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-        $credentials = $request->only('email', 'password');
+//     public function login(Request $request)
+//     {
+//         $request->validate([
+//             'email' => 'required|string|email',
+//             'password' => 'required|string',
+//         ]);
+//         $credentials = $request->only('email', 'password');
 
-        $token = Auth::attempt($credentials);
-        // if (!$token) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Unauthorized',
-        //     ], 401);
-        // }
+//         $token = Auth::attempt($credentials);
+//         // if (!$token) {
+//         //     return response()->json([
+//         //         'status' => 'error',
+//         //         'message' => 'Unauthorized',
+//         //     ], 401);
+//         // }
 
 
-if($token === false){
-    return response()->json(['error' => 'Unauthorized'], 401);
-}
-// return $this->respondWithToken($token);
+// if($token === false){
+//     return response()->json(['error' => 'Unauthorized'], 401);
+// }
+// // return $this->respondWithToken($token);
 
-        $user = Auth::user();
-        return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ]
-            ]);
+//         $user = Auth::user();
+//         return response()->json([
+//                 'status' => 'success',
+//                 'user' => $user,
+//                 'authorisation' => [
+//                     'token' => $token,
+//                     'type' => 'bearer',
+//                 ]
+//             ]);
 
+//     }
+
+
+public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
+
+    if (!Auth::attempt($credentials)) {
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
+
+    $user = Auth::user();
+    $token = JWTAuth::fromUser($user);
+
+    return response()->json([
+        'status' => 'success',
+        'user' => $user,
+        'authorisation' => [
+            'token' => $token,
+            'type' => 'bearer',
+        ]
+    ]);
+}
+
+
 
     public function register(Request $request){
         $request->validate([
@@ -85,10 +109,16 @@ if($token === false){
 
     public function logout()
     {
-        JWTAuth::invalidate();
+        try {
+            $token = JWTAuth::parseToken();
+            $token->invalidate();
 
-        return response()->json(['message' => 'Successfully logged out']);
+            return response()->json(['message' => 'Successfully logged out']);
+        } catch (JWTException $exception) {
+            return response()->json(['message' => 'Failed to log out']);
+        }
     }
+
 
     public function user()
     {

@@ -12,13 +12,24 @@ class InvoiceController extends Controller
 {
     public function getInvoices(){
 
-       $invoices = DB::table('invoice')
-       ->join('client', 'client.client_id', '=', 'invoice.client_id')
-       ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'client.name', 'client.email', DB::raw('sum(invoice.cost) as total'))
-       ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'invoice.equipment_serial_number', 'client.name', 'client.email')
-       ->orderBy('created_at', 'desc')
-       ->distinct()
-       ->get();
+        $invoices = DB::table('invoice')
+        ->join('client', 'client.client_id', '=', 'invoice.client_id')
+        ->join('users', 'users.id', '=', 'invoice.created_binvoiced_byy')
+        ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'client.name', 'client.email', DB::raw('concat(users.first_name, " ", users.last_name) as full_name'), DB::raw('sum(invoice.cost) as total'))
+        ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'invoice.equipment_serial_number', 'client.name', 'client.email', 'full_name')
+        ->orderBy('created_at', 'desc')
+        ->distinct()
+        ->get();
+
+//         $invoices = DB::table('invoice')
+//    ->join('client', 'client.client_id', '=', 'invoice.client_id')
+//    ->join('users', 'users.id', '=', 'invoice.created_binvoiced_byy')
+//    ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'client.name', 'client.email', DB::raw('concat(users.first_name, " ", users.last_name) as full_name'), DB::raw('sum(invoice.cost) as total'))
+//    ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'invoice.equipment_serial_number', 'client.name', 'client.email', 'full_name')
+//    ->orderBy('created_at', 'desc')
+//    ->distinct()
+//    ->paginate(50);
+
 
         // $invoices = Invoice::query()->get();
         return $invoices;

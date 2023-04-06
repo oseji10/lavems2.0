@@ -60,7 +60,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::controller(App\Http\Controllers\AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
-    // Route::post('logout', 'logout');
+    Route::post('logout', 'logout');
     // Route::post('refresh', 'refresh');
 
 });
