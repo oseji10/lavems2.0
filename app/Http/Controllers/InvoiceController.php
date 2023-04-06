@@ -28,29 +28,34 @@ class InvoiceController extends Controller
 
 
     public function store(Request $request)
-{
-    // Validate the request data
-    $validatedData = $request->validate([
-        'client_id' => 'required',
-        'equipment_serial_numbers.*' => 'required',
-        'equipments.*' => 'required',
-        'quantities.*' => 'required'
-    ]);
-    // Loop through the submitted data and create an invoice item for each record
-    foreach ($validatedData['equipment_serial_numbers'] as $key => $value) {
-        $invoiceItem = new Invoice;
-        $invoiceItem->client_id = $validatedData['client_id'];
-        $invoiceItem->equipment_serial_number = $value;
-        $invoiceItem->equipment_name = $validatedData['equipments'][$key];
-        $invoiceItem->quantity = $validatedData['quantities'][$key];
-        $invoiceItem->save();
-    }
-    Log::debug($invoiceItem);
+    {
+        try {
 
-// return $validatedData;
-    // Redirect back with success message
-    return redirect()->back()->with('success', 'Invoice added successfully!');
-}
+
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $pin = mt_rand(100000, 999999)
+                . mt_rand(100000, 999999);
+            $random_string = str_shuffle($pin);
+
+
+                $invoiceItem = new Invoice;
+                $invoiceItem->invoice_number = $request->invoice_number;
+                $invoiceItem->client_id = $request->client_id;
+                $invoiceItem->equipment_serial_number = $request->equipment_serial_number;
+                $invoiceItem->equipment = $request->equipment;
+                $invoiceItem->quantity = $request->quantity;
+                $invoiceItem->cost = $request->cost;
+                $invoiceItem->save();
+
+            return "success";
+            // return redirect()->back()->with('success', 'Invoice added successfully!');
+        } catch (\Exception $e) {
+            // Redirect back with error message
+            return "error";
+            // return redirect()->back()->with('error', 'An error occurred while adding the invoice: ' . $e->getMessage());
+        }
+    }
+
 
 
 }
