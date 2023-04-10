@@ -38,13 +38,13 @@ class ClientController extends Controller
         ]);
 
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $pin = mt_rand(1000000, 9999999)
-            . mt_rand(1000000, 9999999)
+        $pin = mt_rand(10000, 999999)
+            . mt_rand(10000, 999999)
             . $characters[rand(0, strlen($characters) - 1)];
         $random_string = str_shuffle($pin);
 
         $client = new Client();
-        $client->client_id = $random_string;
+        $client->client_id = $pin;
         $client->name = $request->name;
         $client->phone_number = $request->phone_number;
         $client->email = $request->email;

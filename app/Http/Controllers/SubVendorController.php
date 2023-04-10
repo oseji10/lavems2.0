@@ -14,6 +14,7 @@ class SubVendorController extends Controller
     public function getPayments(){
         $payments = DB::table('subvendor')
          ->join('client', 'client.client_id', '=', 'subvendor.client_id')
+
          ->select('subvendor.id','subvendor.invoice_number', 'subvendor.client_id', 'subvendor.created_at', 'subvendor.amount_payable', 'subvendor.amount', 'client.name', 'subvendor.captured_by', DB::raw('sum(subvendor.amount) as total'))
          ->groupBy('subvendor.id', 'subvendor.invoice_number', 'subvendor.client_id', 'subvendor.created_at', 'subvendor.amount_payable', 'subvendor.amount', 'client.name', 'subvendor.captured_by',)
          ->distinct()

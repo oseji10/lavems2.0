@@ -9,6 +9,8 @@ use App\Http\Controllers\EDIController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SubVendorController;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +60,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::controller(App\Http\Controllers\AuthController::class)->group(function () {
-    Route::post('login', 'login');
+    // Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('logout', 'logout');
     // Route::post('refresh', 'refresh');
@@ -82,3 +84,16 @@ Route::get('subvendor_payments', [SubVendorController::class, 'getPayments']);
 
 Route::get('/receipt/{id}', [SubVendorController::class, 'clientReceipt']);
 Route::get('/invoice/{id}', [SubVendorController::class, 'clientInvoice']);
+
+
+Route::post('login', function (Request $request) {
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $token = $user->createToken('Token Name')->plainTextToken;
+        return response()->json(['access_token' => $token]);
+    } else {
+        return response()->json(['error' => 'Unauthenticated'], 401);
+    }
+});
