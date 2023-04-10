@@ -44,7 +44,7 @@ class ClientController extends Controller
         $random_string = str_shuffle($pin);
 
         $client = new Client();
-        $client->client_id = $pin;
+        $client->client_id = $random_string;
         $client->name = $request->name;
         $client->phone_number = $request->phone_number;
         $client->email = $request->email;
@@ -55,7 +55,7 @@ class ClientController extends Controller
         $client->nature_of_business = $request->nature_of_business;
         $client->edi_id = $request->edi_id;
         $client->referred_by = $request->referred_by;
-        $client->registered_by = auth()->id();
+        // $client->registered_by = auth()->id();
         $client->save();
 
         return response()->json([
