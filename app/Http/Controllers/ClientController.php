@@ -61,7 +61,7 @@ class ClientController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'New client successfully added',
-            'clients' => $client,
+            'clients' => [$client],
         ]);
 
     }
