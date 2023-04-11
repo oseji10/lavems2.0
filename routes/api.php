@@ -84,6 +84,7 @@ Route::get('subvendor_payments', [SubVendorController::class, 'getPayments']);
 
 Route::get('/receipt/{id}', [SubVendorController::class, 'clientReceipt']);
 Route::get('/invoice/{id}', [SubVendorController::class, 'clientInvoice']);
+Route::get('/site-inspection/{id}', [SubVendorController::class, 'siteInspection']);
 
 
 Route::post('login', function (Request $request) {

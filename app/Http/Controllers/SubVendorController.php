@@ -60,4 +60,23 @@ class SubVendorController extends Controller
     }
 
 
+    public function siteInspection(Request $request, $id){
+        $receipt = DB::table('invoice')
+            ->join('client', 'client.client_id', '=', 'invoice.client_id')
+            ->select('invoice.id', 'invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'invoice.equipment', 'invoice.quantity', 'invoice.cost', 'client.name', 'client.nature_of_business', 'client.contact_address', 'client.phone_number', DB::raw('sum(invoice.cost*invoice.quantity) as grand_total'))
+            ->where('invoice_number', '=', $id)
+            ->groupBy('invoice.id', 'invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'invoice.equipment', 'client.name', 'client.nature_of_business', 'client.contact_address', 'client.phone_number')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $grandTotal = $receipt->sum('grand_total');
+        // dd($receipt);
+        return response()->json([
+            'receipt' => $receipt,
+            'grand_total' => $grandTotal
+        ]);
+    }
+
+
+
 }
