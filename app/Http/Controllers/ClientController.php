@@ -23,19 +23,19 @@ class ClientController extends Controller
     }
 
     public function store(Request $request){
-        $request->validate([
-            'client_id' => 'string',
-            'name' => 'string',
-            'phone_number' => 'string',
-            'email' => 'email',
-            'contact_address' => 'string',
-            'gender' => 'string',
-            'marital_status' => 'string',
-            'state_of_residence' => 'string',
-            'nature_of_business' => 'string',
-            'edi_id' => 'string',
-            'referred_by'=>'string'
-        ]);
+        // $request->validate([
+        //     'client_id' => 'string',
+        //     'name' => 'string',
+        //     'phone_number' => 'string',
+        //     'email' => 'email',
+        //     'contact_address' => 'string',
+        //     'gender' => 'string',
+        //     'marital_status' => 'string',
+        //     'state_of_residence' => 'string',
+        //     'nature_of_business' => 'string',
+        //     'edi_id' => 'string',
+        //     'referred_by'=>'string'
+        // ]);
 
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $pin = mt_rand(10000, 999999)
