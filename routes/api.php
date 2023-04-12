@@ -76,6 +76,10 @@ Route::middleware(['jwt.auth'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => 'auth:jwt'], function () {
+    // Your protected routes here
+
+});
 Route::post('/roles', [RolesController::class, 'store'])->name('create.roles');
 Route::post('edi', [EDIController::class, 'store'])->name('create.edi');
 Route::get('edi', [EDIController::class, 'fetchEdis'])->name('get.edis');
@@ -97,6 +101,8 @@ Route::get('/receipt/{id}', [SubVendorController::class, 'clientReceipt']);
 Route::get('/invoice/{id}', [SubVendorController::class, 'clientInvoice']);
 Route::get('/site-inspection/{id}', [SubVendorController::class, 'siteInspection']);
 Route::get('/release-of-funds/{id}', [SubVendorController::class, 'releaseOfFunds']);
+
+
 
 
 // Route::post('login', function (Request $request) {
