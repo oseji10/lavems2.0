@@ -62,9 +62,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::controller(App\Http\Controllers\AuthController::class)->group(function () {
     // Route::post('login', 'login');
     Route::post('register', 'register');
-    Route::post('logout', 'logout');
+    // Route::post('logout', 'logout');
     // Route::post('refresh', 'refresh');
 
+});
+
+// Route::post('login', 'Auth\AuthController@login');
+// Route::middleware('auth:jwt')->post('logout', 'Auth\JwtAuthController@logout');
+
+Route::post('login', [AuthController::class, 'login']);
+Route::middleware('auth:jwt')->post('logout', [AuthController::class, 'logout']);
+Route::middleware(['jwt.auth'])->get('/user', function (Request $request) {
+    return $request->user();
 });
 
 Route::post('/roles', [RolesController::class, 'store'])->name('create.roles');
@@ -88,14 +97,14 @@ Route::get('/site-inspection/{id}', [SubVendorController::class, 'siteInspection
 Route::get('/release-of-funds/{id}', [SubVendorController::class, 'releaseOfFunds']);
 
 
-Route::post('login', function (Request $request) {
-    $credentials = $request->only('email', 'password');
+// Route::post('login', function (Request $request) {
+//     $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-        $token = $user->createToken('Token Name')->plainTextToken;
-        return response()->json(['access_token' => $token]);
-    } else {
-        return response()->json(['error' => 'Unauthenticated'], 401);
-    }
-});
+//     if (Auth::attempt($credentials)) {
+//         $user = Auth::user();
+//         $token = $user->createToken('Token Name')->plainTextToken;
+//         return response()->json(['access_token' => $token]);
+//     } else {
+//         return response()->json(['error' => 'Unauthenticated'], 401);
+//     }
+// });
