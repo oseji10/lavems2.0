@@ -83,6 +83,8 @@ Route::post('client', [ClientController::class, 'store'])->name('create.cleint')
 Route::get('client', [ClientController::class, 'fetchClients'])->name('get.clients');
 
 Route::get('/search-client/{id}', [ClientController::class, 'searchClient']);
+Route::get('/client/{id}', [ClientController::class, 'searchAllClients']);
+
 
 Route::get('/export_client_pdf/{id}', [ClientController::class, 'exportClientToPDF'])->name('export.client');
 

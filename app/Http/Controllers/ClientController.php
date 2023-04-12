@@ -22,6 +22,24 @@ class ClientController extends Controller
         }
     }
 
+
+    public function searchAllClients(Request $request, $id)
+    {
+        $client = Client::where('phone_number', 'LIKE', '%'.$id.'%')
+                        ->orWhere('email', 'LIKE', '%'.$id.'%')
+                        ->orWhere('client_id', 'LIKE', '%'.$id.'%')
+                        ->first();
+
+        if ($client) {
+            return response()->json(['client' => $client]);
+        } else {
+            return response()->json(['error' => 'Client not found.'], 404);
+        }
+    }
+
+
+
+
     public function store(Request $request){
         // $request->validate([
         //     'client_id' => 'string',
