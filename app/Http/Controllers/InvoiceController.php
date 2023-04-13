@@ -78,7 +78,7 @@ class InvoiceController extends Controller
                 $invoiceItem->equipment = $request->equipment;
                 $invoiceItem->quantity = $request->quantity;
                 $invoiceItem->cost = $request->cost;
-                $invoiceItem->created_binvoiced_byy = '3';
+                $invoiceItem->created_binvoiced_byy = '4';
                 $invoiceItem->save();
 
             return "success";
