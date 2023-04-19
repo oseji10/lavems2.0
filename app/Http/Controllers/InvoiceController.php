@@ -52,14 +52,19 @@ class InvoiceController extends Controller
 
         public function getInvoices(){
 
+
+
             $invoices = DB::table('invoice')
             ->join('client', 'client.client_id', '=', 'invoice.client_id')
             ->join('users', 'users.id', '=', 'invoice.created_binvoiced_byy')
-            ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at', 'invoice.equipment_serial_number', 'client.name', 'client.email', DB::raw('concat(users.first_name, " ", users.last_name) as full_name'), DB::raw('sum(invoice.cost*invoice.quantity) as grand_total'), DB::raw('sum(invoice.cost*invoice.quantity) as total'))
-            ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'invoice.equipment_serial_number', 'client.name', 'client.email', 'full_name')
-            ->orderBy('created_at', 'desc')
+            ->select('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',  'client.name', 'client.email', DB::raw('concat(users.first_name, " ", users.last_name) as full_name'), DB::raw('sum(invoice.cost*invoice.quantity) as grand_total'), DB::raw('sum(invoice.cost*invoice.quantity) as total'))
+            ->groupBy('invoice.invoice_number', 'invoice.client_id', 'invoice.created_at',   'client.name', 'client.email', 'full_name')
+            ->orderBy('invoice.created_at', 'desc')
+            // ->whereBetween('invoice.created_at', ['2023-04-13', NOW()])
             ->distinct()
             ->get();
+
+
 
 
         return response()->json([
