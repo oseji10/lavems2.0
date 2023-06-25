@@ -10,7 +10,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SubVendorController;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\IMGController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,3 +113,6 @@ Route::get('/release-of-funds/{id}', [SubVendorController::class, 'releaseOfFund
 //         return response()->json(['error' => 'Unauthenticated'], 401);
 //     }
 // });
+
+
+Route::post('upload_image', [IMGController::class, 'uploadImage']);

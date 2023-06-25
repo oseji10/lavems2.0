@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 // use HasOne;
 
+
 // class User extends Authenticatable
 class User extends Authenticatable implements JWTSubject
 {
