@@ -17,7 +17,7 @@ class IMGController extends Controller
             $imageName = time() . $file->getClientOriginalName();
             $filePath = 'uploads/' . $imageName;
 
-            $gallery = $request->file('image');
+            $gallery = $request->file('gallery');
             $galleryName = time() . $gallery->getClientOriginalName();
             $galleryPath = 'uploads/' . $galleryName;
 
