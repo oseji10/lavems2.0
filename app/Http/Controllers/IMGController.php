@@ -17,29 +17,37 @@ class IMGController extends Controller
             $imageName = time() . $file->getClientOriginalName();
             $filePath = 'uploads/' . $imageName;
 
+            $gallery = $request->file('image');
+            $galleryName = time() . $gallery->getClientOriginalName();
+            $galleryPath = 'uploads/' . $galleryName;
+
             try {
                 Storage::disk('s3')->put($filePath, file_get_contents($file));
+                Storage::disk('s3')->put($galleryPath, file_get_contents($gallery));
                 $imageUrl = $filePath;
+
+                $galleryUrl = $filePath;
 
                 // Insert the image URL into the database or perform other operations
 
 $completeUrl = 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl;
-
 $completeUrl = [
     "id" => 477,
     "original" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
     "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
 ];
 
-$completeGalleryUrl = 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl;
 
+
+
+$completeGalleryUrl = 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl;
 $completeGalleryUrl = [
     "id" => 477,
-    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
-    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
+    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
+    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
 ];
 
-                    $product = new Product();
+    $product = new Product();
     $product->name = $request->name;
     $product->description = $request->description;
     $product->price = $request->price;
