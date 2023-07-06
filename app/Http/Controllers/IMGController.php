@@ -12,64 +12,62 @@ class IMGController extends Controller
         $pin = mt_rand(100000, 999999) . mt_rand(100000, 999999);
         $random_string = str_shuffle($pin);
 
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->sale_price = $request->sale_price;
+        $product->quantity = $request->quantity;
+        $product->unit = $request->unit;
+        $product->shop_id = $request->shop_id;
+        $product->type_id = 1;
+        $product->slug = $random_string;
+
+        $completeUrl = null;
+        $completeGalleryUrl = null;
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $imageName = time() . $file->getClientOriginalName();
             $filePath = 'uploads/' . $imageName;
 
+            try {
+                Storage::disk('s3')->put($filePath, file_get_contents($file));
+                $imageUrl = $filePath;
+                $completeUrl = [
+                    "id" => 477,
+                    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
+                    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
+                ];
+                $product->image = json_encode($completeUrl);
+            } catch (\Exception $e) {
+                // Handle error while uploading the image
+                // You may log the error or perform necessary error handling
+            }
+        }
+
+        if ($request->hasFile('gallery')) {
             $gallery = $request->file('gallery');
             $galleryName = time() . $gallery->getClientOriginalName();
             $galleryPath = 'uploads/' . $galleryName;
 
             try {
-                Storage::disk('s3')->put($filePath, file_get_contents($file));
                 Storage::disk('s3')->put($galleryPath, file_get_contents($gallery));
-                $imageUrl = $filePath;
-
-                $galleryUrl = $filePath;
-
-                // Insert the image URL into the database or perform other operations
-
-$completeUrl = 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl;
-$completeUrl = [
-    "id" => 477,
-    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
-    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
-];
-
-
-
-
-$completeGalleryUrl = 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl;
-$completeGalleryUrl = [
-    "id" => 477,
-    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
-    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
-];
-
-    $product = new Product();
-    $product->name = $request->name;
-    $product->description = $request->description;
-    $product->price = $request->price;
-    $product->sale_price = $request->sale_price;
-    $product->quantity = $request->quantity;
-    $product->unit = $request->unit;
-    $product->image = json_encode($completeUrl);
-    $product->shop_id = $request->shop_id;
-    $product->type_id = 1;
-    $product->slug = $random_string;
-    $product->gallery = json_encode($completeGalleryUrl);
-    $product->save();
-    return $product;
-
-                return response()->json('Successful');
+                $galleryUrl = $galleryPath;
+                $completeGalleryUrl = [
+                    "id" => 477,
+                    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
+                    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
+                ];
+                $product->gallery = json_encode($completeGalleryUrl);
             } catch (\Exception $e) {
-                // Error occurred while uploading the image
-                return response()->json('Failed to upload image to S3', 500);
+                // Handle error while uploading the gallery
+                // You may log the error or perform necessary error handling
             }
         }
 
-        // No image file found in the request
-        return response()->json('Image file not provided', 400);
+        $product->save();
+
+        return $product;
     }
 }
