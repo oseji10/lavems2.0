@@ -24,7 +24,7 @@ class IMGController extends Controller
         $product->slug = $random_string;
 
         $completeUrl = null;
-        $completeGalleryUrl = null;
+        $completeGalleryUrls = [];
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -47,23 +47,27 @@ class IMGController extends Controller
         }
 
         if ($request->hasFile('gallery')) {
-            $gallery = $request->file('gallery');
-            $galleryName = time() . $gallery->getClientOriginalName();
-            $galleryPath = 'uploads/' . $galleryName;
+            $galleryFiles = $request->file('gallery');
 
-            try {
-                Storage::disk('s3')->put($galleryPath, file_get_contents($gallery));
-                $galleryUrl = $galleryPath;
-                $completeGalleryUrl = [
-                    "id" => 477,
-                    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
-                    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
-                ];
-                $product->gallery = json_encode($completeGalleryUrl);
-            } catch (\Exception $e) {
-                // Handle error while uploading the gallery
-                // You may log the error or perform necessary error handling
+            foreach ($galleryFiles as $gallery) {
+                $galleryName = time() . $gallery->getClientOriginalName();
+                $galleryPath = 'uploads/' . $galleryName;
+
+                try {
+                    Storage::disk('s3')->put($galleryPath, file_get_contents($gallery));
+                    $galleryUrl = $galleryPath;
+                    $completeGalleryUrls[] = [
+                        "id" => 477,
+                        "original" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
+                        "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $galleryUrl,
+                    ];
+                } catch (\Exception $e) {
+                    // Handle error while uploading a gallery image
+                    // You may log the error or perform necessary error handling
+                }
             }
+
+            $product->gallery = json_encode($completeGalleryUrls);
         }
 
         $product->save();
