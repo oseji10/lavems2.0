@@ -31,6 +31,14 @@ $completeUrl = [
     "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
 ];
 
+$completeGalleryUrl = 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl;
+
+$completeGalleryUrl = [
+    "id" => 477,
+    "original" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
+    "thumbnail" => 'https://goboss-ng.s3.amazonaws.com/' . $imageUrl,
+];
+
                     $product = new Product();
     $product->name = $request->name;
     $product->description = $request->description;
@@ -42,7 +50,7 @@ $completeUrl = [
     $product->shop_id = $request->shop_id;
     $product->type_id = 1;
     $product->slug = $random_string;
-    // $product->gallery = json_encode($completeGallery);
+    $product->gallery = json_encode($completeGalleryUrl);
     $product->save();
     return $product;
 
