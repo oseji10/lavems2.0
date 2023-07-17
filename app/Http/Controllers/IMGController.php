@@ -3,6 +3,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Str;
+
+use App\Models\ProductTag;
 
 class IMGController extends Controller
 {
@@ -21,7 +24,9 @@ class IMGController extends Controller
         $product->unit = $request->unit;
         $product->shop_id = $request->shop_id;
         $product->type_id = 1;
-        $product->slug = $random_string;
+        $product->category_id = $request->category_id;
+        // $product->slug = $random_string;
+        $product->slug = Str::slug($request->name);
 
         $completeUrl = null;
         $completeGalleryUrls = [];
@@ -71,6 +76,17 @@ class IMGController extends Controller
         }
 
         $product->save();
+
+    //    $product_tag = new ProductTag();
+    //     $product_tag->product_id= $product->id;
+    //     $product_tag->tag_id= 10;
+
+    //     // $product_tag->withoutTimestamps();
+    //     $product_tag->save();
+
+
+        // $category_product = new CategoryProduct()
+        // $category_product->product_id
 
         return $product;
     }
